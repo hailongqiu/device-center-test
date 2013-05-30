@@ -38,10 +38,11 @@ struct _Processor
     gfloat cpu_mhz;
 
     gchar * has_fpu;
-    gchar *bug_fdiv;
-    gchar *bug_hlt;
-    gchar *bug_f00f;
-    gchar *bug_coma;
+
+    gchar *fdiv_bug;
+    gchar *hlt_bug;
+    gchar *f00f_bug;
+    gchar *coma_bug;
 
     gint model;
     gint family;
@@ -99,7 +100,15 @@ int main(int argc, char *argv[])
             get_int("cache size",   processor->cache_size);
             get_float("cpu MHz",    processor->cpu_mhz);
             get_float("bogomips",   processor->bogomips);
+            //
             get_str("fpu", processor->has_fpu);
+            //
+            get_str("fdiv_bug", processor->fdiv_bug);
+            get_str("hlt_bug",  processor->hlt_bug);
+            get_str("f00f_bug", processor->f00f_bug);
+            get_str("coma_bug", processor->coma_bug);
+            //
+            get_int("processor", processor->id);
         }
         g_strfreev(tmp);
     }
@@ -110,12 +119,17 @@ int main(int argc, char *argv[])
     }
     //
     fclose(cpuinfo);
-    printf("cache_size:%d\n", ((Processor*)proces->data)->cache_size);
-    printf("model name:%s\n", ((Processor*)proces->data)->model_name);
-    printf("bogomips:%.2f\n", ((Processor*)proces->data)->bogomips);
-    printf("bogomips:%.2f\n", ((Processor*)proces->next->data)->bogomips);
+    puts("================输出cpu信息========================");
     printf("cpu个数:%d\n", processor_number);
-
+    GSList *temp_proces = NULL;
+    for (temp_proces = proces; temp_proces != NULL ; temp_proces = temp_proces->next)
+    {
+        puts("---------------------------------------------------");
+        printf("id:%d\n", ((Processor*)temp_proces->data)->id);
+        printf("model name:%s\n", ((Processor*)temp_proces->data)->model_name);
+        printf("cache_size:%d\n", ((Processor*)temp_proces->data)->cache_size);
+        printf("bogomips:%.2f\n", ((Processor*)temp_proces->data)->bogomips);
+    }
     return TRUE;
 }
 
