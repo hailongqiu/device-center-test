@@ -56,11 +56,6 @@ struct _Processor
 
 int main(int argc, char *argv[])
 {
-    GList *list1 = NULL;
-    list1 = g_list_append(list1, GINT_TO_POINTER(12));
-    list1 = g_list_append(list1, GINT_TO_POINTER(12.3));
-    list1 = g_list_insert(list1, GINT_TO_POINTER(12.3), 0);
-    int n = g_list_length(list1);
     
     GSList *proces = NULL;
     Processor *processor = NULL;
