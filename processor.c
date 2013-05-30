@@ -1,6 +1,6 @@
-
 #include <glib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define get_str(field_name, ptr)              \
     if (g_str_has_prefix(tmp[0], field_name)) \
@@ -92,29 +92,35 @@ int main(int argc, char *argv[])
             processor_number++;
         }
 
-
         if (tmp[0] && tmp[1])
         {
             // 去除前面和后面的空格.
             tmp[0] = g_strstrip(tmp[0]);
             tmp[1] = g_strstrip(tmp[1]);
-            /*
-            if (g_str_has_prefix(tmp[0], "model name"))
-            {
-                processor->model_name = g_strdup(tmp[1]);
-                printf("%s==\n", processor->model_name);
-            }
-            */
-            get_str("model name", processor->model_name);
-            printf("%s==\n", processor->model_name);
-            get_str("vendor_id", processor->vendor_id);
-            get_str("flags", processor->flags);
-            get_int("cache size", processor->cache_size);
+            // 获取cpu的信息.
+            get_str("model name",   processor->model_name);
+            get_str("vendor_id",    processor->vendor_id);
+            get_str("flags",        processor->flags);
+            get_int("cache size",   processor->cache_size);
+            get_float("cpu MHz",    processor->cpu_mhz);
+            get_float("bogomips",   processor->bogomips);
+            get_str("fpu", processor->has_fpu);
         }
         g_strfreev(tmp);
     }
+
+    if (processor)
+    {
+        proces = g_slist_append(proces, processor);
+    }
     //
     fclose(cpuinfo);
+    printf("cache_size:%d\n", ((Processor*)proces->data)->cache_size);
+    printf("model name:%s\n", ((Processor*)proces->data)->model_name);
+    printf("bogomips:%.2f\n", ((Processor*)proces->data)->bogomips);
+    printf("bogomips:%.2f\n", ((Processor*)proces->next->data)->bogomips);
+    printf("cpu个数:%d\n", processor_number);
+
     return TRUE;
 }
 
